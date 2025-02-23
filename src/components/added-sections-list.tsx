@@ -44,8 +44,10 @@ export default function AddedSectionsList({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
+    if (!over) return;
+
     if (over && active.id !== over.id) {
-      reorderSections(active.id, over.id);
+      reorderSections(active.id.toString(), over.id.toString());
     }
   };
 
@@ -55,7 +57,8 @@ export default function AddedSectionsList({
         aria-labelledby="sections-added-heading"
         className={cn(
           `flex py-6 gap-4 flex-col w-full border-r  overflow-y-auto border-b`,
-          isScrolled && "top top-24 w-full", isInAside && "h-[200px]"
+          isScrolled && "top top-24 w-full",
+          isInAside && "h-[200px]"
         )}
       >
         <h1
