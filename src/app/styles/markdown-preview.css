@@ -1,0 +1,134 @@
+/* Base do Markdown */
+.markdown-preview {
+  line-height: 1.6;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-wrap: break-word;
+  border: 1px solid hsl(var(--border));
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.markdown-preview h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--primary));
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 1px;
+}
+
+.markdown-preview h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 1px;
+}
+
+.markdown-preview h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: normal;
+}
+
+/* Parágrafos e Listas */
+.markdown-preview p {
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  margin: 0.5rem 0 0.5rem 1.5rem;
+}
+
+.markdown-preview li {
+  margin-bottom: 0.3rem;
+}
+
+/* Links */
+.markdown-preview a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+.markdown-preview a:hover {
+  opacity: 0.8;
+}
+
+.markdown-preview pre {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  padding: 0.5rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  border: 1px solid hsl(var(--border));
+  position: relative;
+}
+
+.markdown-preview code {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--primary));
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+}
+
+.markdown-preview p code {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--primary));
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.markdown-preview blockquote {
+  border-left: 4px solid hsl(var(--primary));
+  padding-left: 1rem;
+  color: hsl(var(--muted-foreground));
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+/* Tabelas */
+.markdown-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.markdown-preview th {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+/* Checkbox (Listas de tarefas) */
+.markdown-preview input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+/* Dark mode */
+.dark .markdown-preview {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.dark .markdown-preview pre {
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+.dark .markdown-preview code {
+  background-color: hsl(var(--card));
+  color: hsl(var(--primary));
+}
