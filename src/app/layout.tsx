@@ -1,15 +1,9 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { inter } from "./fonts";
 import { Toaster } from "@/components/ui/sonner";
 import { AppProvider } from "@/components/app-provider";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Ink Mark",
-  description: "Ink Mark is app for creating readme files for your projects",
-};
 
 export default function RootLayout({
   children,

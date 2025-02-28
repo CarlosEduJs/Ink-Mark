@@ -10,7 +10,7 @@ import {
 } from "./ui/dialog";
 import { File, Search, TableOfContents } from "lucide-react";
 import { DefaultSectionGroups } from "./sections-to-use";
-import {  useAppContext } from "@/contexts/AppContext";
+import { useAppContext } from "@/contexts/AppContext";
 import Link from "next/link";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -30,20 +30,10 @@ const pages: Pages[] = [
     href: "/app",
   },
   {
-    page: "FAQ",
-    href: "/faq",
-  },
-  {
-    page: "Templates",
-    href: "/templates",
-  },
-  {
     page: "Github Project",
     href: "https://github.com/CarlosEduJs",
   },
 ];
-
-
 
 export default function CommandApp() {
   const { addSection, setOpen, open } = useAppContext();

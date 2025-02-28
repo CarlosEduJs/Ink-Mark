@@ -40,7 +40,7 @@ export default function Header({ isHome = false }: HeaderProps) {
       setIsScrolled(window.scrollY > 0);
 
       const sections = navLinks.map((link) => link.href.replace("#", ""));
-      const scrollPosition = window.scrollY + 100; 
+      const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -103,25 +103,37 @@ export default function Header({ isHome = false }: HeaderProps) {
       )}
       <div className="flex items-center gap-2 w-full md:w-fit">
         {isHome && <SearchBarBtn />}
-
         {isHome ? (
-          <Button className="md:hidden" size={"icon"} variant={"ghost"}>
-            <Github />
-          </Button>
+          <Link
+            href={"https://github.com/CarlosEduJs/Ink-Mark"}
+            target="_blank"
+          >
+            <Button className="md:hidden" size={"icon"} variant={"ghost"}>
+              <Github />
+            </Button>
+          </Link>
         ) : (
-          <Button size={"icon"} variant={"ghost"}>
-            <Github />
-          </Button>
+          <Link
+            href={"https://github.com/CarlosEduJs/Ink-Mark"}
+            target="_blank"
+          >
+            <Button className="flex" size={"icon"} variant={"ghost"}>
+              <Github />
+            </Button>
+          </Link>
         )}
         <div className="flex items-center gap-2">
           <ModeToggle />
           {isHome && (
-            <div className="hidden md:flex">
+            <Link
+              href={"https://github.com/CarlosEduJs/Ink-Mark"}
+              className="hidden md:flex"
+            >
               <RainbowButton className="text-muted text-sm w-52 h-8 gap-3">
                 <Github className="w-4 h-4" />
                 Star on GitHub
               </RainbowButton>
-            </div>
+            </Link>
           )}
           {!isHome && <CTAButton />}
         </div>
