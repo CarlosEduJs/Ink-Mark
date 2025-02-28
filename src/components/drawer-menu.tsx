@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppContext } from "./app-provider";
+import { useAppContext } from "@/contexts/AppContext";
 import { AlignLeft } from "@geist-ui/icons";
 import {
   Drawer,
@@ -10,26 +10,28 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./ui/drawer";
-import AvailableSectionGroups from "./avaliable-sections-group";
-import AddedSectionsList from "./added-sections-list";
 import { Button } from "./ui/button";
-import AddedCustomSectionsList from "./customs-sections-list";
+import BlockLists from "./block-lists";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export default function DrawerMenu() {
-  const { sections, availableGroups, customSections } = useAppContext();
+  const { openDrawer, setOpenDrawer } = useAppContext();
   const isMobile = useIsMobile();
 
-  if (!isMobile) {
-    return null;
-  }
-
   return (
-    <Drawer>
+    <Drawer open={openDrawer} onOpenChange={setOpenDrawer}>
       <DrawerTrigger asChild>
-        <Button size={"icon"} variant={"ghost"}>
+        <Button
+          size={"sm"}
+          variant={"outline"}
+          className={cn(
+            `min-w-fit `,
+            !isMobile && "md:min-w-52"
+          )}
+        >
           <AlignLeft className="cursor-pointer" />
-          <h1 className="sr-only">Show Sections</h1>
+          <h1 className="md:not-sr-only sr-only">Show Sections</h1>
         </Button>
       </DrawerTrigger>
       <DrawerContent className="h-[750px]">
@@ -40,12 +42,7 @@ export default function DrawerMenu() {
           </DrawerDescription>
         </DrawerHeader>
         <nav className="flex flex-col gap-2 w-full h-full overflow-y-auto">
-          <AddedSectionsList sections={sections} isInAside={false} />
-          <AddedCustomSectionsList
-            sections={customSections}
-            isInAside={false}
-          />
-          <AvailableSectionGroups isInAside={false} groups={availableGroups} />
+          <BlockLists isInAside={false} />
         </nav>
       </DrawerContent>
     </Drawer>

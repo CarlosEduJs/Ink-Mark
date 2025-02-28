@@ -1,12 +1,33 @@
 import { cn } from "@/lib/utils";
-import { useAppContext } from "./app-provider";
+import { useAppContext } from "@/contexts/AppContext";
 import { type Section } from "./sections-to-use";
-import { Check, Hand, ListRestart, Plus, Trash } from "lucide-react";
+import {
+  CheckCircle,
+  Ellipsis,
+  Hand,
+  Layers2,
+  ListRestart,
+  Plus,
+  Trash,
+  Trash2,
+} from "lucide-react";
 import DialogEditCustomSection from "./dialog-edit-custom-section";
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { v4 as uuidv4 } from "uuid";
+import { useEffect, useState } from "react";
+import { group } from "console";
 
 interface SectionItemProps {
   section: Section;
@@ -22,8 +43,12 @@ function SectionItemInSectionAddeds({ section, isInAside }: SectionItemProps) {
     addSection,
     resetCodeSection,
     cSections,
+    setMode,
+    mode,
+    isSaving,
   } = useAppContext();
   const isSelected = section.label === currentSection?.label;
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleRemoveSection = (section: Section) => {
     removeSection(section.id);
@@ -33,6 +58,19 @@ function SectionItemInSectionAddeds({ section, isInAside }: SectionItemProps) {
         onClick: () => addSection(section),
       },
     });
+  };
+
+  const handleDuplicateSection = (section: Section) => {
+    const newId = uuidv4();
+    const newLabel = section.label + "(Duplicate)";
+
+    const duplicateSection: Section = {
+      ...section,
+      label: newLabel,
+      id: newId,
+    };
+
+    addSection(duplicateSection);
   };
 
   const isInCustomSection = cSections.find(
@@ -47,6 +85,12 @@ function SectionItemInSectionAddeds({ section, isInAside }: SectionItemProps) {
     transition,
   };
 
+  const handleSelect = () => {
+    if (isSaving) return;
+    setCurrentSection(section);
+    if (mode === "Preview") setMode("Editor");
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -58,19 +102,20 @@ function SectionItemInSectionAddeds({ section, isInAside }: SectionItemProps) {
       aria-label={`Select section ${section.label}`}
       onDoubleClick={(e) => {
         e.stopPropagation();
-        setCurrentSection(section);
+        handleSelect();
       }}
-      onKeyDown={(e) => e.key === "Enter" && setCurrentSection(section)}
+      onKeyDown={(e) => e.key === "Enter" && !isSaving && handleSelect}
       className={cn(
         "group focus:ring-2 focus:ring-primary focus:outline-none flex items-center justify-between min-w-fit border px-2 rounded-md cursor-pointer transition-all duration-300 py-1 hover:dark:bg-secondary/50 hover:bg-secondary",
-        isSelected && "dark:bg-secondary/50 bg-secondary"
+        isSelected && "dark:bg-secondary/50 bg-secondary",
+        isSaving && "opacity-50"
       )}
     >
       <div
         className="flex items-center gap-2 w-full"
         onClick={(e) => {
           e.stopPropagation();
-          setCurrentSection(section);
+          handleSelect();
         }}
       >
         <div
@@ -82,7 +127,9 @@ function SectionItemInSectionAddeds({ section, isInAside }: SectionItemProps) {
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-3 w-full justify-between">
-            <span className="text-sm font-semibold">{section.label}</span>
+            <span className="text-sm font-semibold max-w-44 truncate">
+              {section.label}
+            </span>
             {isInCustomSection && (
               <Badge className="h-4 mr-2">Custom Section</Badge>
             )}
@@ -102,28 +149,58 @@ function SectionItemInSectionAddeds({ section, isInAside }: SectionItemProps) {
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <button
-          aria-label={`Reset code for ${section.label}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            resetCodeSection(section);
-          }}
-          className="p-1 hover:text-primary focus:ring-2 focus:ring-primary rounded"
-        >
-          <ListRestart className="w-4 h-4 text-muted-foreground" />
-        </button>
-        <button
-          aria-label={`Delete section ${section.label}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRemoveSection(section);
-          }}
-          className="p-1 hover:text-red-500 focus:ring-2 focus:ring-red-500 rounded"
-        >
-          <Trash className="w-4 h-4 text-muted-foreground" />
-        </button>
-      </div>
+      <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant={"ghost"}
+            size={"icon"}
+            aria-label="Open variable options"
+            role="button"
+            aria-haspopup="true"
+          >
+            <Ellipsis aria-hidden="true" />
+            <span className="sr-only">Show Options</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="min-w-52">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              className="flex items-center gap-2 cursor-pointer"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                handleDuplicateSection(section);
+                setDropdownOpen(false);
+              }}
+            >
+              <Layers2 />
+              Duplicate
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="flex items-center gap-2 cursor-pointer"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                resetCodeSection(section);
+                setDropdownOpen(false);
+              }}
+            >
+              <ListRestart />
+              Reset code
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="flex items-center gap-2 text-red-500 cursor-pointer"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                handleRemoveSection(section);
+                setDropdownOpen(false);
+              }}
+            >
+              <Trash2 />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
@@ -133,12 +210,22 @@ function SectionItem({
   isInAside,
   isCustomSection,
 }: SectionItemProps) {
-  const { addSection, handleRemoveCustomSection, handleNewCustomSection } =
-    useAppContext();
+  const {
+    addSection,
+    handleRemoveCustomSection,
+    handleNewCustomSection,
+    sections,
+  } = useAppContext();
+
+  const findSectionInSections = sections.find((s) => s.id === section.id);
 
   const handleAddSection = (section: Section) => {
+    const data: Section = {
+      ...section,
+      added: true,
+    };
     if (!section.added) {
-      addSection(section);
+      addSection(data);
     }
   };
 
@@ -163,12 +250,9 @@ function SectionItem({
     >
       <div className="flex items-center gap-2 w-full">
         <div className="flex items-center gap-2">
-          {section.added ? (
-            <span
-              aria-hidden="true"
-              className="w-4 h-4 text-muted-foreground px-1"
-            >
-              <Check className="w-4 h-4 " />
+          {findSectionInSections ? (
+            <span aria-hidden="true" className="w-4 h-4 text-muted-foreground">
+              <CheckCircle className="w-4 h-4" />
             </span>
           ) : (
             <button

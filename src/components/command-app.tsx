@@ -10,7 +10,7 @@ import {
 } from "./ui/dialog";
 import { File, Search, TableOfContents } from "lucide-react";
 import { DefaultSectionGroups } from "./sections-to-use";
-import { useAppContext } from "./app-provider";
+import {  useAppContext } from "@/contexts/AppContext";
 import Link from "next/link";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -189,6 +189,9 @@ export default function CommandApp() {
 
             {filteredSectionGroups.length > 0 && (
               <nav aria-label="Available Sections">
+                <h3 className="text-muted-foreground font-semibold text-xs mb-2 px-3">
+                  Sections
+                </h3>
                 <ul>
                   {filteredSectionGroups.map((group, groupIndex) => (
                     <li key={group.id}>

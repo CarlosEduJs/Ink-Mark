@@ -1,251 +1,251 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import AppContext from "@/contexts/AppContext";
+import { Section, Variables, ModeProps, SaveMods } from "@/types";
+import { DefaultSectionGroups } from "./sections-to-use";
+import { getFromDB, saveToDB } from "@/utils/indexedDB";
+import { handleKeyDown } from "@/handlers/keyboardHandlers";
 import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
-import { Section, DefaultSectionGroups, SectionGroup } from "./sections-to-use";
+  generateMarkdown,
+  replaceVariables,
+} from "@/handlers/markdownHandlers";
+import {
+  updateVariable,
+  addVariable,
+  removeVariable,
+} from "@/handlers/variablesHandlers";
+import {
+  updateSection,
+  addSection,
+  removeSection,
+} from "@/handlers/sectionsHandlers";
+import {
+  handleNewCustomSection,
+  handleRemoveCustomSection,
+} from "@/handlers/customSectionHandlers";
+import {
+  handleReset,
+  reorderSections,
+} from "@/handlers/resetAndReorderHandlers";
+import { standardVariables } from "@/constants/standardsVariables";
 
-interface AppContextType {
-  sections: Section[];
-  setSections: (sections: Section[]) => void;
-  availableGroups: SectionGroup[];
-  currentSection: Section | null;
-  setCurrentSection: (section: Section | null) => void;
-  markdownCode: string;
-  setMarkdownCode: (code: string) => void;
-  updateSection: (updatedSection: Section) => void;
-  updateCustomSection: (updatedSection: Section) => void;
-  resetCodeSection: (updatedSection: Section) => void;
-  addSection: (newSection: Section) => void;
-  removeSection: (sectionId: string) => void;
-  projectName: string;
-  setProjectName: (projectName: string) => void;
-  customSections: Section[];
-  cSections: Section[];
-  handleNewCustomSection: (newCustomerSection: Section) => void;
-  handleRemoveCustomSection: (sectionId: string) => void;
-  reorderSections: (activeId: string, overId: string) => void;
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const AppContext = createContext<AppContextType | undefined>(undefined);
+const DB_NAME = "AppDatabase";
+const STORE_NAME = "AppStore";
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
-  const [projectName, setProjectName] = useState<string>("My New Project");
-  const [sections, setSections] = useState<Section[]>([
-    {
-      id: "001-001",
-      label: "Title And Description",
-      description: "The title and description of README.md",
-      default: true,
-      added: true,
-      code: "# ${projectName}\n\n- Enter description here...",
-      defaultCode: "# ${projectName}\n\n- Enter description here...",
-    },
-  ]);
-  const [currentSection, setCurrentSection] = useState<Section | null>(
-    sections[0] ?? null
-  );
-  const availableGroups = useMemo(() => {
-    return DefaultSectionGroups.map((group) => ({
-      ...group,
-      sections: group.sections.map((section) => ({
-        ...section,
-        added: sections.some((s) => s.id === section.id),
-      })),
-    }));
-  }, [sections]);
+  const [asideOpen, setAsideOpen] = useState(true);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [openEditNameProjectDialog, setOpenEditNameProjectDialog] =
+    useState(false);
+  const [openChangeCurrentSectionDialog, setOpenChangeCurrentSectionDialog] =
+    useState(false);
+  const [openResetDialog, setOpenResetDialog] = useState(false);
+  const [openSheetVariables, setOpenSheetVariables] = useState(false);
+  const [openNewCustomSectionDialog, setOpenNewCustomSectionDialog] =
+    useState(false);
+  const [copyFullCode, setCopyFullCode] = useState(false);
+  const [openDialogHelp, setOpenDialogHelp] = useState(false);
+  const [sections, setSections] = useState<Section[]>([]);
+  const [currentSection, setCurrentSection] = useState<Section | null>(null);
   const [customSections, setCustomSections] = useState<Section[]>([]);
-  const cSections = useMemo(() => {
-    return customSections.map((section) => ({
-      ...section,
-      added: sections.some((s) => s.id === section.id),
-    }));
-  }, [sections, customSections]);
-
   const [markdownCode, setMarkdownCode] = useState<string>("");
-
-  useEffect(() => {
-    const generateMarkdown = () => {
-      return sections
-        .map((section) =>
-          section.code.replace(/\$\{projectName\}/g, projectName)
-        )
-        .join("\n\n");
-    };
-
-    setMarkdownCode(generateMarkdown());
-  }, [sections, projectName]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        setOpen((prev) => !prev);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  const setSectionsFunction = useCallback((sections: Section[]) => {
-    setSections(sections);
-    setCurrentSection(sections[0] ?? null);
-  }, []);
-
-  const handleSelectSection = useCallback((section: Section | null) => {
-    setCurrentSection(section);
-  }, []);
-
-  const updateSection = useCallback((updatedSection: Section) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [variables, setVariables] = useState<Variables[]>([]);
+  const [mode, setMode] = useState<ModeProps["mode"]>("Split View");
+  const [isSaving, setIsSaving] = useState(false);
+  const updateVariableHandler = updateVariable(setVariables);
+  const addVariableHandler = addVariable(setVariables);
+  const removeVariableHandler = removeVariable(setVariables);
+  const updateSectionHandler = async (updatedSection: Section) => {
     setSections((prev) =>
       prev.map((section) =>
         section.id === updatedSection.id ? updatedSection : section
       )
     );
-  }, []);
 
-  const updateCustomSection = useCallback((updatedSection: Section) => {
-    setCustomSections((prev) =>
-      prev.map((section) =>
-        section.id === updatedSection.id ? updatedSection : section
-      )
+    const updatedSections = sections.map((section) =>
+      section.id === updatedSection.id ? updatedSection : section
     );
-    updateSection(updatedSection);
-  }, []);
 
-  const resetCodeSection = useCallback((updatedSection: Section) => {
-    const defaultCode = updatedSection.defaultCode;
-    const data = {
-      ...updatedSection,
-      id: updatedSection.id,
-      code: defaultCode || "",
-    };
-    updateSection(data);
-    setTimeout(() => {
-      setCurrentSection(data);
-    }, 100);
-  }, []);
+    try {
+      await saveToDB(DB_NAME, STORE_NAME, "sections", updatedSections);
+      console.log("Section updated successfully");
+    } catch (error) {
+      console.error("Error updating section", error);
 
-  const addSection = useCallback((newSection: Section) => {
-    setSections((prev) => {
-      if (prev.some((section) => section.id === newSection.id)) {
-        return prev;
-      }
-      setCurrentSection(newSection);
-      return [...prev, { ...newSection, added: true }];
-    });
-  }, []);
+      setSections((prev) =>
+        prev.map((section) =>
+          section.id === updatedSection.id ? updatedSection : section
+        )
+      );
+      throw error;
+    }
+  };
+  const addSectionHandler = addSection(setSections, setCurrentSection);
+  const removeSectionHandler = removeSection(
+    setSections,
+    setCurrentSection,
+    currentSection
+  );
+  const handleNewCustomSectionHandler =
+    handleNewCustomSection(setCustomSections);
+  const handleRemoveCustomSectionHandler = handleRemoveCustomSection(
+    setCustomSections,
+    removeSectionHandler
+  );
+  const handleResetHandler = handleReset(
+    setSections,
+    setCurrentSection,
+    setCustomSections,
+    setMarkdownCode,
+    setVariables
+  );
+  const reorderSectionsHandler = reorderSections(setSections, setIsSaving);
 
-  const handleNewCustomSection = useCallback((newCustomSection: Section) => {
-    setCustomSections((prev) => {
-      if (prev.some((section) => section.id === newCustomSection.id)) {
-        return prev;
-      }
-      return [...prev, { ...newCustomSection }];
-    });
-  }, []);
-
-  const removeSection = useCallback(
-    (sectionId: string) => {
-      setSections((prevSections) => {
-        const updatedSections = prevSections.filter(
-          (section) => section.id !== sectionId
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const savedSections = await getFromDB(DB_NAME, STORE_NAME, "sections");
+        const savedCustomSections = await getFromDB(
+          DB_NAME,
+          STORE_NAME,
+          "customSections"
         );
-        if (currentSection?.id === sectionId) {
-          let newCurrentSection = null;
-          const removedIndex = prevSections.findIndex(
-            (section) => section.id === sectionId
-          );
-
-          if (updatedSections.length > 0) {
-            if (removedIndex < updatedSections.length) {
-              newCurrentSection = updatedSections[removedIndex];
-            } else {
-              newCurrentSection = updatedSections[updatedSections.length - 1];
-            }
-          }
-
-          setCurrentSection(newCurrentSection);
+        const savedVariables = await getFromDB(
+          DB_NAME,
+          STORE_NAME,
+          "variables"
+        );
+        if (savedSections && savedSections.length > 0) {
+          setSections(savedSections);
+          setCurrentSection(savedSections[0]);
         } else {
-          setCurrentSection(null);
+          const defaultSections = [
+            {
+              id: "001-001",
+              label: "Title And Description",
+              description: "The title and description of README.md",
+              default: true,
+              added: true,
+              code: "# ${projectName}\n\n- Enter description here...",
+              defaultCode: "# ${projectName}\n\n- Enter description here...",
+            },
+          ];
+          setSections(defaultSections);
+          setCurrentSection(defaultSections[0]);
         }
 
-        return updatedSections;
-      });
-    },
-    [currentSection, setCurrentSection]
-  );
+        if (savedCustomSections) {
+          setCustomSections(savedCustomSections);
+        }
 
-  const handleRemoveCustomSection = useCallback((sectionId: string) => {
-    setCustomSections((prev) => {
-      const updatedCustomSections = prev.filter(
-        (section) => section.id !== sectionId
-      );
+        if (savedVariables && savedVariables.length > 0) {
+          setVariables(savedVariables);
+        } else {
+          setVariables(standardVariables);
+          await saveToDB(DB_NAME, STORE_NAME, "variables", standardVariables);
+        }
+      } catch (error) {
+        console.error("Failed to load data from IndexedDB:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      return updatedCustomSections;
-    });
-    removeSection(sectionId);
+    loadInitialData();
   }, []);
 
-  const reorderSections = useCallback((activeId: string, overId: string) => {
-    setSections((prevSections) => {
-      const oldIndex = prevSections.findIndex((s) => s.id === activeId);
-      const newIndex = prevSections.findIndex((s) => s.id === overId);
+  useEffect(() => {
+    setMarkdownCode(generateMarkdown(sections, replaceVariables(variables)));
+  }, [sections, variables]);
 
-      if (oldIndex === -1 || newIndex === -1) return prevSections;
-
-      const updatedSections = [...prevSections];
-      const [movedSection] = updatedSections.splice(oldIndex, 1);
-      updatedSections.splice(newIndex, 0, movedSection);
-
-      return updatedSections;
-    });
+  useEffect(() => {
+    const handleKeyPress = handleKeyDown(
+      setOpen,
+      setAsideOpen,
+      setOpenDrawer,
+      setOpenEditNameProjectDialog,
+      setOpenChangeCurrentSectionDialog,
+      setOpenResetDialog,
+      setOpenSheetVariables,
+      setOpenNewCustomSectionDialog,
+      setCopyFullCode,
+      markdownCode,
+      setOpenDialogHelp,
+      setMode,
+      isSaving
+    );
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
   }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AppContext.Provider
       value={{
         sections,
-        setSections: setSectionsFunction,
+        setSections,
         currentSection,
-        setCurrentSection: handleSelectSection,
-        availableGroups,
+        setCurrentSection,
+        availableGroups: DefaultSectionGroups,
         markdownCode,
         setMarkdownCode,
-        updateSection,
-        updateCustomSection,
-        addSection,
-        removeSection,
-        projectName,
-        setProjectName,
+        updateSection: updateSectionHandler,
+        updateCustomSection: updateSectionHandler,
+        addSection: addSectionHandler,
+        removeSection: removeSectionHandler,
         customSections,
-        cSections,
-        handleNewCustomSection,
-        handleRemoveCustomSection,
-        resetCodeSection,
-        reorderSections,
+        cSections: customSections.map((section) => ({
+          ...section,
+          added: sections.some((s) => s.id === section.id),
+        })),
+        handleNewCustomSection: handleNewCustomSectionHandler,
+        handleRemoveCustomSection: handleRemoveCustomSectionHandler,
+        resetCodeSection: (updatedSection: Section) => {
+          const defaultCode = updatedSection.defaultCode;
+          updateSectionHandler({ ...updatedSection, code: defaultCode || "" });
+          setTimeout(() => {
+            setCurrentSection(updatedSection);
+          }, 100);
+        },
+        reorderSections: reorderSectionsHandler,
         open,
         setOpen,
+        asideOpen,
+        setAsideOpen,
+        handleReset: handleResetHandler,
+        addVariable: addVariableHandler,
+        removeVariable: removeVariableHandler,
+        updateVariable: updateVariableHandler,
+        variables,
+        mode,
+        setMode,
+        openDrawer,
+        setOpenDrawer,
+        openEditNameProjectDialog,
+        setOpenEditNameProjectDialog,
+        openChangeCurrentSectionDialog,
+        setOpenChangeCurrentSectionDialog,
+        openResetDialog,
+        setOpenResetDialog,
+        openSheetVariables,
+        setOpenSheetVariables,
+        openNewCustomSectionDialog,
+        setOpenNewCustomSectionDialog,
+        copyFullCode,
+        setCopyFullCode,
+        openDialogHelp,
+        setOpenDialogHelp,
+        isSaving,
+        setIsSaving,
       }}
     >
       {children}
     </AppContext.Provider>
   );
-}
-
-export function useAppContext() {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useAppContext must be used within an AppProvider");
-  }
-  return context;
 }

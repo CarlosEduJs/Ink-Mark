@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[![imagem-2025-02-28-160827571.png](https://i.postimg.cc/QMhqM663/imagem-2025-02-28-160827571.png)](https://postimg.cc/HrvMZtDZ)
 
-## Getting Started
+ > Ink Mark is your ultimate sidekick for crafting the perfect README, transforming your ideas into flawlessly structured content. Simple, powerful, and distraction-free – because creativity deserves nothing less.
 
-First, run the development server:
+### [Demo](https://ink-mark.vercel.app/app)
 
+# Ink Mark [![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)](https://github.com/CarlosEduJs/Ink-Mark)
+
+
+## 📑 Table of Contents
+
+- [♨️ About Ink Mark](#️-about-ink-mark)
+- [📢 Features](#-features)
+- [🤔 Why Use Ink Mark?](#-why-use-ink-mark)
+- [🛠️ Technologies Used](#️-technologies-used)
+- [🔧 Installation](#-installation)
+- [🤝 Contribution](#-contribution)
+- [🤞 License](#-license)
+---
+
+## ♨️ About Ink Mark
+
+- Ink Mark is a modern and intuitive tool designed to simplify the creation and management of documentation and READMEs. Built with cutting-edge technologies like Next.js, Tailwind CSS, and TypeScript, Ink Mark offers a seamless and highly customizable experience for developers looking to create documentation efficiently and organized🔥.
+
+---
+
+## 📢 Features
+
+1. ✍️ Real-Time Editor & Preview: Write and see your changes instantly with a side-by-side editor and preview. 🖥️ Resize windows to match your workflow.
+2. 🔀 Dynamic Variables: Define and reuse custom variables (e.g., Ink Mark) throughout your document. 🔄 Keep everything consistent and avoid repetition.
+3. 🎨 Customizable Sections: Add, edit, or remove sections freely. 🏗️ Build from scratch or use predefined layouts.
+4. 👁️‍🗨️ Flexible View Modes: Switch between Editor Only, Preview Only, or Side-by-Side modes. 🎛️ Adapt the interface to your workflow.
+5. 💾 Auto-Save: Your work is always safe! 🔄 Changes are automatically saved, so you never lose progress.
+
+---
+
+## 🤔 Why Use Ink Mark?
+
+1. ⚡ Boost Productivity: Speed up your workflow with dynamic variables and customizable sections, making complex documentation effortless.
+2. 🔄 Ultimate Flexibility: Adapt Ink Mark to your needs with multiple view modes and a highly customizable editor.
+3. 🚀 Cutting-Edge Technology: Built with the latest technologies to deliver a fast, smooth, and modern user experience.
+- ✨ Perfect for developers, documentation teams, and anyone who values efficiency! Try Ink Mark today and revolutionize the way you create documentation. 📄🔥
+
+---
+
+## 🛠️ Technologies Used
+
+1. ⚛️ Next.js – Powers the interface with efficient rendering and seamless performance.
+2. 🎨 Tailwind CSS – Provides fast, responsive, and modern styling.
+3. 🔷 TypeScript – Ensures safer, scalable, and maintainable code.
+
+---
+
+## 🔧 Installation
+
+- ❗Make sure you have [Git](https://git-scm.com/downloads) and [Node](https://nodejs.org/) installed on your system.
+
+- Firstly:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/CarlosEduJs/Ink-Mark
+```
+- After:
+```
+cd ink-mark
+```
+- Finally, run:
+```
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🤝 Contribution
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- How to Contribute:
+- If you'd like to contribute to the project, feel free to open issues, suggest new features, or submit pull requests. All contributions are welcome!
 
-## Learn More
+1. Fork the project
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ ## 🤞 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Ink Mark is open-source and available under the [MIT License](https://opensource.org/license/MIT).
 
-## Deploy on Vercel
+- Made by [Carlos Dev Js](https://github.com/CarlosEduJs)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- *Readme created with [Ink Mark](https://ink-mark.vercel.app/app)*

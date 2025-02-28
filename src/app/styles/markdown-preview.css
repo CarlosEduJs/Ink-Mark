@@ -1,4 +1,4 @@
-/* Base do Markdown */
+
 .markdown-preview {
   line-height: 1.6;
   color: hsl(var(--foreground));
@@ -17,23 +17,26 @@
   color: hsl(var(--primary));
   border-bottom: 1px solid hsl(var(--border));
   padding-bottom: 1px;
+  margin-block: 1rem;
+  text-align: center;
 }
 
 .markdown-preview h2 {
   font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   font-weight: 600;
   border-bottom: 1px solid hsl(var(--border));
   padding-bottom: 1px;
+  margin-bottom: 1rem;
 }
 
 .markdown-preview h3 {
   font-size: 1rem;
-  margin-bottom: 0.5rem;
   font-weight: normal;
+  margin-bottom: 1rem;
 }
 
-/* Parágrafos e Listas */
+
 .markdown-preview p {
   margin: 0.5rem 0;
   font-weight: 600;
@@ -66,6 +69,7 @@
   overflow-x: auto;
   border: 1px solid hsl(var(--border));
   position: relative;
+  margin-bottom: 1rem;
 }
 
 .markdown-preview code {
@@ -90,6 +94,7 @@
   color: hsl(var(--muted-foreground));
   margin: 1rem 0;
   font-style: italic;
+  margin-bottom: 1rem;
 }
 
 /* Tabelas */

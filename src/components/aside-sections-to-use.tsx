@@ -1,18 +1,14 @@
-"use client";
-
-import { useAppContext } from "./app-provider";
-import AvailableSectionGroups from "./avaliable-sections-group";
-import AddedSectionsList from "./added-sections-list";
-import AddedCustomSectionsList from "./customs-sections-list";
+import BlockLists from "./block-lists";
+import { useAppContext } from "@/contexts/AppContext";
 
 export default function AsideSectionsToUse() {
-  const { sections, availableGroups, cSections } = useAppContext();
+  const { asideOpen } = useAppContext();
+
+  if (!asideOpen) return null;
 
   return (
-    <aside className="max-md:hidden md:sticky ml-5 flex left-0 items-center flex-col min-w-fit  overflow-x-hidden max-h-screen overflow-y-auto">
-      <AddedSectionsList sections={sections} isInAside={true} />
-      <AddedCustomSectionsList sections={cSections} isInAside={true} />
-      <AvailableSectionGroups isInAside={true} groups={availableGroups} />
+    <aside className="max-md:hidden md:sticky ml-1 flex left-0 items-center flex-col min-w-fit overflow-hidden h-[690px]">
+      <BlockLists isInAside={true} />
     </aside>
   );
 }

@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { useAppContext } from "./app-provider";
+import {  useAppContext } from "@/contexts/AppContext";
 import { useCallback, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type Section } from "./sections-to-use";

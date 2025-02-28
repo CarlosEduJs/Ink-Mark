@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Header from "@/components/header";
-import { plus_jakarta_sans } from "./fonts";
+import { inter } from "./fonts";
 import { Toaster } from "@/components/ui/sonner";
-import AsideSectionsToUse from "@/components/aside-sections-to-use";
 import { AppProvider } from "@/components/app-provider";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Ink Mark",
@@ -19,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${plus_jakarta_sans.className} antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -27,9 +26,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AppProvider>
-            <Header />
             <main className="pt-16">{children}</main>
             <Toaster />
+            <footer className="flex justify-between items-center px-4 py-2 border-t border-border">
+              <p className="text-sm text-muted-foreground">
+                Ink Mark &copy; {new Date().getFullYear()} - Created by <Link href="https://github.com/CarlosEduJs" className="underline">CarlosDevJs</Link>
+              </p>
+            </footer>
           </AppProvider>
         </ThemeProvider>
       </body>

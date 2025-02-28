@@ -6,11 +6,10 @@ import { cn } from "@/lib/utils";
 import { SectionItemInSectionAddeds } from "./sections-items";
 import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useAppContext } from "./app-provider";
+import { useAppContext } from "@/contexts/AppContext";
 
 interface AddedSectionsListProps {
   sections: Section[];
@@ -56,9 +55,8 @@ export default function AddedSectionsList({
       <nav
         aria-labelledby="sections-added-heading"
         className={cn(
-          `flex py-6 gap-4 flex-col w-full border-r  overflow-y-auto border-b`,
-          isScrolled && "top top-24 w-full",
-          isInAside && "h-[200px]"
+          `flex py-6 gap-4 flex-col w-full border-r h-full overflow-y-auto `,
+          isScrolled && "top top-24 w-full"
         )}
       >
         <h1

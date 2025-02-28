@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -10,8 +10,7 @@ import {
   DialogHeader,
   DialogDescription,
 } from "./ui/dialog";
-import { Input } from "./ui/input";
-import { useAppContext } from "./app-provider";
+import { useAppContext } from "@/contexts/AppContext";
 import { Pencil } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -23,26 +22,37 @@ import {
   DrawerTrigger,
 } from "./ui/drawer";
 import InputField from "./input-field";
+import Shortcut from "./shortcut";
 
 export default function DialogSetNameProject() {
-  const [isOpen, setIsOpen] = useState(true);
-  const { setProjectName, projectName } = useAppContext();
+  const [isOpen, setIsOpen] = useState(false);
+  const {
+    openEditNameProjectDialog,
+    setOpenEditNameProjectDialog,
+    variables,
+    updateVariable,
+  } = useAppContext();
   const isMobile = useIsMobile();
 
-  const handleSetNameProject = (name: string) => {
-    setProjectName(name);
+  const variableData = variables.find((v) => v.keyProps === "projectName");
+  const [inputValue, setInputValue] = useState(variableData?.value);
+
+  const handleSetNameProject = () => {
+    updateVariable("projectName", inputValue || "");
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    setInputValue(variableData?.value);
+  }, [variableData?.value]);
 
   if (isMobile) {
     return (
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerTrigger asChild>
           <Button size={"sm"} variant={"outline"}>
-            <Pencil className="w-2 h-2" />
-            <span className="text-xs sr-only md:not-sr-only">
-              Edit Name Project
-            </span>
+            <Pencil />
+            <span className="sr-only md:not-sr-only">Edit Name Project</span>
           </Button>
         </DrawerTrigger>
         <DrawerContent className="flex flex-col gap-6 px-6 pb-2">
@@ -57,26 +67,32 @@ export default function DialogSetNameProject() {
             <InputField
               label="Project Name"
               id="project-name"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
+              value={inputValue || ""}
+              onChange={(e) => setInputValue(e.target.value)}
               type="text"
               placeholder="type name project here..."
             />
-            <Button onClick={() => handleSetNameProject(projectName)}>
-              Set Name Project
-            </Button>
+            <Button onClick={handleSetNameProject}>Set Name Project</Button>
           </div>
         </DrawerContent>
       </Drawer>
     );
   }
 
+  const handleSubmit = () => {
+    handleSetNameProject();
+    setOpenEditNameProjectDialog(false);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={openEditNameProjectDialog}
+      onOpenChange={setOpenEditNameProjectDialog}
+    >
       <DialogTrigger asChild>
-        <Button size={"sm"} variant={"outline"}>
-          <Pencil className="w-2 h-2" />
-          <span className="text-xs">Edit Name Project</span>
+        <Button size={"sm"} variant={"outline"} className="h-6 text-xs border-none">
+          <Pencil />
+          <span className="sr-only md:not-sr-only">Edit Name Project</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -91,14 +107,12 @@ export default function DialogSetNameProject() {
           <InputField
             label="Project Name"
             id="project-name"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
+            value={inputValue || ""}
+            onChange={(e) => setInputValue(e.target.value)}
             type="text"
             placeholder="type name project here..."
           />
-          <Button onClick={() => handleSetNameProject(projectName)}>
-            Set Name Project
-          </Button>
+          <Button onClick={handleSubmit}>Set Name Project</Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -27,8 +27,8 @@ const DefaultSectionGroups: SectionGroup[] = [
         description: "The title and description of README.md",
         default: true,
         added: true,
-        code: "# ${project name}\n\n Enter description here...",
-        defaultCode: "# ${project name}\n\n Enter description here...",
+        code: "# ${projectName}\n\n Enter description here...",
+        defaultCode: "# ${projectName}\n\n Enter description here...",
       },
       {
         id: "001-002",
@@ -36,9 +36,19 @@ const DefaultSectionGroups: SectionGroup[] = [
         description: "Badges to show the status of the project",
         default: false,
         added: false,
-        code: "[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)\n[![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)]()\n[![Build Status](https://img.shields.io/travis/user/repo/master.svg)](https://travis-ci.org/user/repo)",
+        code: "[![Version](https://img.shields.io/badge/Version-${version}-green.svg)](${repoURL})",
         defaultCode:
-          "[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)\n[![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)]()\n[![Build Status](https://img.shields.io/travis/user/repo/master.svg)](https://travis-ci.org/user/repo)",
+          "[![Version](https://img.shields.io/badge/Version-${version}-green.svg)](${repoURL})",
+      },
+      {
+        id: "001-003",
+        label: "Getting Started",
+        description: "Basic setup and first steps",
+        default: false,
+        added: false,
+        defaultCode:
+          "## 🏁 Getting Started\n\nClone the repository:\n```bash\ngit clone ${repoURL}\n```",
+        code: "## 🏁 Getting Started\n\nClone the repository:\n```bash\ngit clone ${repoURL}\n```",
       },
     ],
   },
@@ -63,9 +73,9 @@ const DefaultSectionGroups: SectionGroup[] = [
         description: "How to install the project",
         default: false,
         added: false,
-        code: "## 🔧 Installation\n\n```bash\nnpm install ${projectName}\n# or\nyarn add ${projectName}\n```",
+        code: "## 🔧 Installation\n\nUsing npm:\n```bash\nnpm install ${projectName}\n```\n\nUsing Docker:\n```bash\ndocker pull ${dockerImage}\n```",
         defaultCode:
-          "## 🔧 Installation\n\n```bash\nnpm install ${projectName}\n# or\nyarn add ${projectName}\n```",
+          "## 🔧 Installation\n\nUsing npm:\n```bash\nnpm install ${projectName}\n```\n\nUsing Docker:\n```bash\ndocker pull ${dockerImage}\n```",
       },
       {
         id: "002-003",
@@ -85,6 +95,15 @@ const DefaultSectionGroups: SectionGroup[] = [
         code: "## 🛠️ Technologies\n\n- React\n- TypeScript\n- Node.js\n- PostgreSQL",
         defaultCode:
           "## 🛠️ Technologies\n\n- React\n- TypeScript\n- Node.js\n- PostgreSQL",
+      },
+      {
+        id: "002-005",
+        label: "Deployment",
+        description: "How to deploy the project",
+        added: false,
+        default: false,
+        defaultCode: "## 🚀 Deployment\n\n```bash\nnpm run deploy\n```",
+        code: "## 🚀 Deployment\n\n```bash\nnpm run deploy\n```",
       },
     ],
   },
@@ -152,6 +171,16 @@ const DefaultSectionGroups: SectionGroup[] = [
         defaultCode:
           "## 🗺 Roadmap\n\n- [ ] Feature 1\n- [ ] Feature 2\n- [x] Completed Feature",
       },
+      {
+        id: "003-007",
+        label: "Environment Variables",
+        description: "Required environment variables configuration",
+        default: false,
+        added: false,
+        code: "## 🔑 Environment Variables\n\n`API_KEY` - Your secret key\n`DB_URL` - Database connection URL",
+        defaultCode:
+          "## 🔑 Environment Variables\n\n`API_KEY` - Your secret key\n`DB_URL` - Database connection URL",
+      },
     ],
   },
   {
@@ -165,7 +194,7 @@ const DefaultSectionGroups: SectionGroup[] = [
         description: "The contributors and authors of the project",
         default: false,
         added: false,
-        code: "## 👥 Authors\n\n- [@yourusername](https://github.com/yourusername)",
+        code: "## 👥 Authors\n\n- [yourusername](https://github.com/yourusername)",
         defaultCode:
           "## 👥 Authors\n\n- [@yourusername](https://github.com/yourusername)",
       },
@@ -234,6 +263,34 @@ const DefaultSectionGroups: SectionGroup[] = [
         code: "## 📌 Changelog\n\n### 1.0.0\n- Initial Release",
         defaultCode: "## 📌 Changelog\n\n### 1.0.0\n- Initial Release",
       },
+      {
+        id: "005-005",
+        label: "Version Comparison",
+        added: false,
+        default: false,
+        description: "Feature comparison between versions",
+        defaultCode:
+          "## 📊 Version Matrix\n\n| Feature | v1.0 | v2.0 |\n|---------|------|------|\n| Auth    | ✅   | ✅   |\n| API     | ❌   | ✅   |",
+        code: "## 📊 Version Matrix\n\n| Feature | v1.0 | v2.0 |\n|---------|------|------|\n| Auth    | ✅   | ✅   |\n| API     | ❌   | ✅   |",
+      },
+      {
+        id: "005-006",
+        label: "Troubleshooting",
+        added: false,
+        default: false,
+        description: "Common issues and solutions",
+        defaultCode: "## 🚑 Troubleshooting\n\n**Error: Connection timeout**\n- Check firewall settings\n- Verify database credentials",
+        code: "## 🚑 Troubleshooting\n\n**Error: Connection timeout**\n- Check firewall settings\n- Verify database credentials"
+      },
+      {
+        id: "005-007",
+        label: "Related Projects",
+        added: false,
+        default: false,
+        description: "Links to related repositories",
+        defaultCode: "## 🔗 Related Projects\n\n- [${siblingProject}](https://github.com/example/sibling-project)",
+        code: "## 🔗 Related Projects\n\n- [${siblingProject}](https://github.com/example/sibling-project)"
+      }
     ],
   },
   {
@@ -278,26 +335,6 @@ const DefaultSectionGroups: SectionGroup[] = [
     label: "Advanced Topics",
     description: "Advanced sections for developers who want to dive deeper",
     sections: [
-      {
-        id: "008-001",
-        label: "API Reference",
-        description: "Detailed documentation for the project's API",
-        default: false,
-        added: false,
-        code: "## 📚 API Reference\n\n### `functionName(param1, param2)`\n- Description: Does something cool.\n- Returns: A value.",
-        defaultCode:
-          "## 📚 API Reference\n\n### `functionName(param1, param2)`\n- Description: Does something cool.\n- Returns: A value.",
-      },
-      {
-        id: "008-002",
-        label: "Customization",
-        description: "How to customize or extend the project",
-        default: false,
-        added: false,
-        code: '## 🎨 Customization\n\nYou can customize the theme by modifying the `config.json` file:\n\n```json\n{\n  "theme": "dark"\n}\n```',
-        defaultCode:
-          '## 🎨 Customization\n\nYou can customize the theme by modifying the `config.json` file:\n\n```json\n{\n  "theme": "dark"\n}\n```',
-      },
       {
         id: "008-003",
         label: "Debugging",
@@ -345,6 +382,34 @@ const DefaultSectionGroups: SectionGroup[] = [
         code: "## 📋 Compliance\n\nThis project complies with GDPR and other relevant regulations.",
         defaultCode:
           "## 📋 Compliance\n\nThis project complies with GDPR and other relevant regulations.",
+      },
+    ],
+  },
+  {
+    id: "010",
+    label: "Technical Documentation",
+    description:
+      "Sections related to legal and compliance aspects of the project",
+    sections: [
+      {
+        id: "008-001",
+        label: "API Reference",
+        description: "Detailed documentation for the project's API",
+        default: false,
+        added: false,
+        code: "## 📚 API Reference\n\n### `functionName(param1, param2)`\n- Description: Does something cool.\n- Returns: A value.",
+        defaultCode:
+          "## 📚 API Reference\n\n### `functionName(param1, param2)`\n- Description: Does something cool.\n- Returns: A value.",
+      },
+      {
+        id: "008-002",
+        label: "Customization",
+        description: "How to customize or extend the project",
+        default: false,
+        added: false,
+        code: '## 🎨 Customization\n\nYou can customize the theme by modifying the `config.json` file:\n\n```json\n{\n  "theme": "dark"\n}\n```',
+        defaultCode:
+          '## 🎨 Customization\n\nYou can customize the theme by modifying the `config.json` file:\n\n```json\n{\n  "theme": "dark"\n}\n```',
       },
     ],
   },

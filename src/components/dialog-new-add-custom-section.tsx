@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { useAppContext } from "./app-provider";
+import { useAppContext } from "@/contexts/AppContext";
 import { useCallback, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type Section } from "./sections-to-use";
@@ -23,13 +23,19 @@ import {
 } from "./ui/drawer";
 import InputField from "./input-field";
 import { toast } from "sonner";
+import Shortcut from "./shortcut";
 
 export default function DialogNewAddCustomSection() {
   const [nameCustomSection, setNameCustomSection] = useState("");
   const [descriptionCustomSection, setDescriptionCustomSection] = useState("");
   const [open, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { handleNewCustomSection, handleRemoveCustomSection } = useAppContext();
+  const {
+    handleNewCustomSection,
+    handleRemoveCustomSection,
+    openNewCustomSectionDialog,
+    setOpenNewCustomSectionDialog,
+  } = useAppContext();
   const btnSubmitDisabled = !nameCustomSection || nameCustomSection.length < 3;
 
   const handleSubmit = useCallback(() => {
@@ -55,6 +61,7 @@ export default function DialogNewAddCustomSection() {
       },
     });
     setIsOpen(false);
+    setOpenNewCustomSectionDialog(false);
   }, [nameCustomSection, descriptionCustomSection, handleNewCustomSection]);
 
   const onChangeNameCustomSection = (
@@ -82,17 +89,17 @@ export default function DialogNewAddCustomSection() {
           <DrawerHeader>
             <DrawerTitle>Add new Custom Sectiom</DrawerTitle>
             <DrawerDescription>
-              Please enter name and description to you custom section.
+              Please enter name and description (opcional) to you custom section.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="w-full grid gap-2 px-4">
+          <div className="w-full grid gap-2 ">
             <InputField
               label="Name Section"
               id="name-section"
               value={nameCustomSection}
               onChange={(e) => onChangeNameCustomSection(e)}
               type="text"
-              placeholder="type here..."
+              placeholder="ex: Features"
             />
             <InputField
               label="Description Section"
@@ -100,7 +107,7 @@ export default function DialogNewAddCustomSection() {
               value={descriptionCustomSection}
               onChange={(e) => onChangeDescriptionCustomSection(e)}
               type="text"
-              placeholder="type description here..."
+              placeholder="ex: This section displays the main features"
             />
           </div>
           <div className="flex items-center justify-between my-3 px-3">
@@ -125,7 +132,10 @@ export default function DialogNewAddCustomSection() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setIsOpen}>
+    <Dialog
+      open={openNewCustomSectionDialog}
+      onOpenChange={setOpenNewCustomSectionDialog}
+    >
       <DialogTrigger asChild>
         <Button variant={"outline"} size={"sm"}>
           <DiamondPlus />
@@ -136,7 +146,7 @@ export default function DialogNewAddCustomSection() {
         <DialogHeader>
           <DialogTitle>Add new Custom Sectiom</DialogTitle>
           <DialogDescription>
-            Please enter name and description to you custom section.
+            Please enter name and description (opcional) to you custom section.
           </DialogDescription>
         </DialogHeader>
         <div className="w-full grid gap-2 ">
@@ -158,13 +168,14 @@ export default function DialogNewAddCustomSection() {
           />
         </div>
         <div className="flex items-center justify-between">
-          <Button size={"sm"} onClick={handleSubmit}>
+          <Button size={"sm"} onClick={handleSubmit} disabled={btnSubmitDisabled}>
             Confirm
           </Button>
           <Button
             variant={"outline"}
             size={"sm"}
-            onClick={() => setIsOpen(false)}
+            
+            onClick={() => setOpenNewCustomSectionDialog(false)}
           >
             Cancel
           </Button>

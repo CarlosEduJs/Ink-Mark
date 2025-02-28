@@ -21,8 +21,8 @@ export default function AvailableSectionGroups({
     <nav
       aria-labelledby="available-sections-heading"
       className={cn(
-        `flex py-6 gap-4 flex-col overflow-y-auto w-full`,
-        isInAside ? `h-[300px] border-r` : `h-[490px] px-4`
+        `flex py-6 gap-4 flex-col overflow-y-auto w-full h-full px-4`,
+        isInAside && ` border-r `
       )}
     >
       <header className="w-full bg-background sticky top-[-24] py-2 flex flex-col gap-2 z-50 px-1">

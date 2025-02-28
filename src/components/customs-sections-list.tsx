@@ -33,8 +33,8 @@ export default function AddedCustomSectionsList({
     <nav
       aria-labelledby="custom-sections-heading"
       className={cn(
-        `flex py-6 gap-4 flex-col w-full border-r  overflow-y-auto border-b`,
-        isScrolled && "top top-24 w-full", isInAside && "h-[200px]"
+        `flex py-6 gap-4 flex-col w-full border-r h-full  overflow-y-auto`,
+        isScrolled && "top top-24 w-full"
       )}
     >
       <header className="px-4 sticky top-0 w-full bg-background flex items-center justify-between">

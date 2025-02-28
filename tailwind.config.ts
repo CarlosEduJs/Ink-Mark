@@ -11,7 +11,8 @@ export default {
   theme: {
   	extend: {
   		screens: {
-  			screen1: '1184px'
+  			screen1: '1242px',
+  			screen2: '956px'
   		},
   		colors: {
   			background: 'hsl(var(--background))',
@@ -76,7 +77,8 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		animation: {
-  			rainbow: 'rainbow var(--speed, 2s) infinite linear'
+  			rainbow: 'rainbow var(--speed, 2s) infinite linear',
+  			ripple: 'ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite'
   		},
   		keyframes: {
   			rainbow: {
@@ -85,6 +87,14 @@ export default {
   				},
   				'100%': {
   					'background-position': '200%'
+  				}
+  			},
+  			ripple: {
+  				'0%, 100%': {
+  					transform: 'translate(-50%, -50%) scale(1)'
+  				},
+  				'50%': {
+  					transform: 'translate(-50%, -50%) scale(0.9)'
   				}
   			}
   		}

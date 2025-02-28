@@ -1,13 +1,15 @@
+import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
 interface InputFieldProps {
   label: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // Corrigido para receber uma função
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void; 
   value: string;
   id: string;
-  type?: string; // Adicionado tipo opcional para o input
-  placeholder?: string; // Adicionado placeholder opcional
+  type?: string;
+  placeholder?: string;
+  badge?: string;
 }
 
 export default function InputField({
@@ -17,10 +19,16 @@ export default function InputField({
   id,
   type = "text",
   placeholder,
+  badge,
 }: InputFieldProps) {
   return (
     <div className="flex flex-col gap-1">
-      <Label className="font-semibold text-sm" htmlFor={id}>{label}</Label>
+      <div className="flex items-center gap-3">
+        <Label className="font-semibold text-sm" htmlFor={id}>
+          {label}
+        </Label>
+        {badge && <Badge variant={"default"}>{badge}</Badge>}
+      </div>
       <Input
         id={id}
         type={type}
