@@ -38,7 +38,6 @@ interface AppContextType {
   removeVariable: (name: string) => void;
   mode: string;
   setMode: (mode: ModeProps["mode"]) => void;
-
   openDrawer: boolean;
   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   openEditNameProjectDialog: boolean;
@@ -59,6 +58,8 @@ interface AppContextType {
   setOpenDialogHelp: React.Dispatch<React.SetStateAction<boolean>>;
   isSaving: boolean;
   setIsSaving: React.Dispatch<React.SetStateAction<boolean>>;
+  code: string;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);

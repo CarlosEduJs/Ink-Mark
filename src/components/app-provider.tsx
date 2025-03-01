@@ -58,6 +58,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const updateVariableHandler = updateVariable(setVariables);
   const addVariableHandler = addVariable(setVariables);
   const removeVariableHandler = removeVariable(setVariables);
+  const [code, setCode] = useState<string>(currentSection?.code || "");
+
+  useEffect(() => {
+    if (currentSection) {
+      setCode(currentSection.code);
+    }
+  }, [currentSection]);
+
   const updateSectionHandler = async (updatedSection: Section) => {
     setSections((prev) =>
       prev.map((section) =>
@@ -243,6 +251,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setOpenDialogHelp,
         isSaving,
         setIsSaving,
+        code,
+        setCode,
       }}
     >
       {children}

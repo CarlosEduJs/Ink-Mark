@@ -14,10 +14,9 @@ import { useAppContext } from "@/contexts/AppContext";
 
 interface CodeEditorProps {
   currentSection: Section | null;
-
   mode: "Editor" | "Preview" | "Split View";
   onCodeChange: (value: string) => Promise<void>;
-  code: string;
+  code?: string;
 }
 
 export default function CodeEditor({
