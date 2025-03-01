@@ -1,8 +1,13 @@
-import { Inter } from "next/font/google";
+import { Inter, Geist } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-export { inter };
+const geist = Geist({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+export { inter, geist };

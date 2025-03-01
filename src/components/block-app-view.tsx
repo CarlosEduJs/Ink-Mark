@@ -22,7 +22,6 @@ import { AlertReset } from "./alert-reset";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import SheetVariables from "./sheet-variables";
-import Shortcut from "./shortcut";
 import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
@@ -41,19 +40,14 @@ export default function BlockAppView() {
     setIsSaving,
     isSaving,
     updateSection,
+    code,
+    setCode,
   } = useAppContext();
-
   const isSectionsEmpty = sections.length === 0;
   const isNotCurrentSection = !currentSection;
   const isMobile = useIsMobile();
 
-  const [code, setCode] = useState(currentSection?.code || "");
 
-  useEffect(() => {
-    if (currentSection) {
-      setCode(currentSection.code);
-    }
-  }, [currentSection]);
 
   const handleAsideOpen = () => {
     setAsideOpen((open) => !open);
@@ -106,7 +100,7 @@ export default function BlockAppView() {
       } finally {
         setIsSaving(false);
       }
-    }, 300),
+    }, 600),
     [currentSection, updateSection]
   );
 

@@ -5,14 +5,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: "https://ink-mark.vercel.app/",
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
     {
       url: "https://ink-mark.vercel.app/app",
       lastModified: new Date(),
       changeFrequency: "daily",
-      priority: 0.8,
+      priority: 1,
     },
   ];
 }
